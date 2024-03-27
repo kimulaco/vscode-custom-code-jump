@@ -1,0 +1,14 @@
+.vscode/**
+.vscode-test/**
+src/**
+.gitignore
+.yarnrc
+**/tsconfig.json
+**/.editorconfig
+**/.eslintrc.json
+**/.prettierignore
+**/.prettierrc.mjs
+**/*.map
+**/*.ts
+**/.vscode-test.*
+**/package-lock.json

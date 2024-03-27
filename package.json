@@ -1,0 +1,67 @@
+{
+  "name": "vscode-regexp-code-jump",
+  "displayName": "RegExp Code Jump",
+  "publisher": "kimulaco",
+  "description": "Extension to create code jump with RegExp",
+  "license": "MIT",
+  "version": "0.1.0",
+  "engines": {
+    "node": "20.12.0",
+    "vscode": "^1.87.0"
+  },
+  "packageManager": "npm@10.5.0",
+  "icon": "images/icon.png",
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [
+    "onLanguage:javascript",
+    "onDebug"
+  ],
+  "main": "./dist/extension.js",
+  "contributes": {
+    "hoverProvider": true,
+    "definitionProvider": true,
+    "languages": [
+      {
+        "id": "javascript",
+        "extensions": [
+          ".js"
+        ],
+        "aliases": [
+          "JavaScript",
+          "javascript",
+          "js"
+        ]
+      }
+    ]
+  },
+  "scripts": {
+    "watch": "tsc -watch -p ./",
+    "build:package": "vsce package",
+    "build:tsc": "tsc -p ./",
+    "prebuild:package": "npm run lint",
+    "prebuild:tsc": "npm run lint",
+    "lint": "npm run lint:eslint && npm run lint:prettier",
+    "lint:eslint": "eslint . --ext .js,.ts --ignore-path .gitignore",
+    "lint:eslint:fix": "eslint . --ext .js,.ts --ignore-path .gitignore --fix",
+    "lint:prettier": "prettier --check . --ignore-path .gitignore --ignore-path .prettierignore",
+    "lint:prettier:fix": "prettier --write . --ignore-path .gitignore --ignore-path .prettierignore",
+    "test": "vscode-test",
+    "pretest": "npm run build:tsc"
+  },
+  "devDependencies": {
+    "@types/mocha": "^10.0.6",
+    "@types/node": "^20.11.30",
+    "@types/vscode": "^1.87.0",
+    "@typescript-eslint/eslint-plugin": "^7.3.1",
+    "@typescript-eslint/parser": "^7.3.1",
+    "@vscode/test-cli": "^0.0.8",
+    "@vscode/test-electron": "^2.3.9",
+    "@vscode/vsce": "^2.24.0",
+    "eslint": "^8.57.0",
+    "eslint-config-prettier": "^9.1.0",
+    "prettier": "^3.2.5",
+    "typescript": "^5.4.3"
+  }
+}
