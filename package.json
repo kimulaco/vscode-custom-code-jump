@@ -53,13 +53,13 @@
     "build:package": "vsce package",
     "build:tsc": "tsc -p ./",
     "prebuild:package": "npm run lint",
-    "prebuild:tsc": "npm run lint",
+    "prebuild:tsc": "del dist",
     "lint": "npm run lint:eslint && npm run lint:prettier",
     "lint:eslint": "eslint . --ext .js,.ts --ignore-path .gitignore",
     "lint:eslint:fix": "eslint . --ext .js,.ts --ignore-path .gitignore --fix",
     "lint:prettier": "prettier --check . --ignore-path .gitignore --ignore-path .prettierignore",
     "lint:prettier:fix": "prettier --write . --ignore-path .gitignore --ignore-path .prettierignore",
-    "test": "vscode-test",
+    "test": "vscode-test --coverage",
     "pretest": "npm run build:tsc"
   },
   "devDependencies": {
@@ -71,6 +71,7 @@
     "@vscode/test-cli": "^0.0.8",
     "@vscode/test-electron": "^2.3.9",
     "@vscode/vsce": "^2.24.0",
+    "del-cli": "^5.1.0",
     "eslint": "^8.57.0",
     "eslint-config-prettier": "^9.1.0",
     "prettier": "^3.2.5",
