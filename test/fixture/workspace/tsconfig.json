@@ -9,5 +9,6 @@
     "strict": true,
     "resolveJsonModule": true
   },
-  "exclude": ["node_modules", "test/fixture"]
+  "exclude": ["node_modules"],
+  "types": ["@types"]
 }

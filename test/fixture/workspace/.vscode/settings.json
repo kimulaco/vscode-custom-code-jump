@@ -1,0 +1,9 @@
+{
+  "regexpCodeJump.definitions": [
+    {
+      "languages": ["javascript", "typescript"],
+      "targetRegexp": "\\.use\\('jp\\.co\\.project\\.(.*?)\\.(.*?)'\\)",
+      "jumpPathFormat": "/src/project/$1/$2.{ts,js}"
+    }
+  ]
+}
