@@ -38,16 +38,28 @@ export class RegExpCodeJumpHoverProvider {
     document: TextDocument,
     position: Position,
   ): Promise<ProviderResult<Hover>> {
+    const regExpCodeJump = new RegExpCodeJump(this._config);
+
     try {
-      const jumpPaths = await this._searchJumpPathsByDocument(
+      const targetCode = await regExpCodeJump.searchTargetCode(
         document,
         position,
       );
-      if (jumpPaths.length <= 0) {
+      if (!targetCode) {
         return;
       }
 
-      const message = this._createMessageByJumpPaths(jumpPaths);
+      const jumpPathPattern =
+        regExpCodeJump.getJumpPathPatternByTargetCode(targetCode);
+      const jumpPaths =
+        await regExpCodeJump.searchJumpPathsByPattern(jumpPathPattern);
+
+      if (jumpPaths.length <= 0) {
+        const message = this._createUnmatchedMessageByPattern(jumpPathPattern);
+        return createMarkdownHover(message);
+      }
+
+      const message = this._createMatchedMessageByJumpPaths(jumpPaths);
       return createMarkdownHover(message);
     } catch (error) {
       if (error instanceof Error) {
@@ -57,34 +69,14 @@ export class RegExpCodeJumpHoverProvider {
     }
   }
 
-  private async _searchJumpPathsByDocument(
-    document: TextDocument,
-    position: Position,
-  ): Promise<string[]> {
-    const regExpCodeJump = new RegExpCodeJump(this._config);
-
-    const targetCode = await regExpCodeJump.searchTargetCode(
-      document,
-      position,
-    );
-    if (!targetCode) {
-      return [];
-    }
-    const jumpPathPattern =
-      regExpCodeJump.getJumpPathPatternByTargetCode(targetCode);
-    const jumpPaths =
-      await regExpCodeJump.searchJumpPathsByPattern(jumpPathPattern);
-
-    return jumpPaths;
+  private _createUnmatchedMessageByPattern(pattern: string): string {
+    return `Files not found by \`${pattern}]\``;
   }
 
-  private _createMessageByJumpPaths(jumpPaths: string[]): string {
-    let message = '';
-
-    for (const jumpPath of jumpPaths) {
-      message += `[/${toRelPath(jumpPath)}](${jumpPath})<br>`;
-    }
-
-    return message;
+  private _createMatchedMessageByJumpPaths(jumpPaths: string[]): string {
+    const messages = jumpPaths.map((jumpPath: string) => {
+      return `[/${toRelPath(jumpPath)}](${jumpPath})`;
+    });
+    return messages.join('<br>');
   }
 }

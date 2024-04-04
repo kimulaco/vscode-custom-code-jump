@@ -49,7 +49,7 @@ export class RegExpCodeJump {
   ): Promise<string[]> {
     const files = await workspace.findFiles(toRelPath(jumpPathPattern));
     if (files.length <= 0) {
-      throw new Error(`${jumpPathPattern} not found`);
+      return [];
     }
 
     return files.map((file) => file.fsPath);
