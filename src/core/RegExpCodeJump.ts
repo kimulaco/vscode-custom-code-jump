@@ -13,6 +13,7 @@ export type RegExpCodeJumpRule = {
 export type RegExpCodeJumpConfig = {
   languages: string[];
   pattern: string;
+  hoverHeader?: string;
   rules: RegExpCodeJumpRule[];
 };
 

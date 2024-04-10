@@ -9,20 +9,32 @@ import { toRelPath } from '../utils/toRelPath';
 
 const WORKSPACE_PATH = getWorkspacePath();
 
-const createMatchedExpectedHover = (relPaths: string[]): Hover => {
+const createMatchedExpectedHover = (
+  relPaths: string[],
+  headerMessage?: string,
+): Hover => {
   if (relPaths.length <= 0) {
     throw new Error('required relPaths');
   }
+
+  const header = headerMessage ? `**${headerMessage}**\n\n` : '';
 
   const messages = relPaths.map((relPath: string) => {
     return `[${relPath}](${WORKSPACE_PATH}/${toRelPath(relPath)})`;
   });
 
-  return createMarkdownHover(messages.join('<br>'));
+  return createMarkdownHover(`${header}${messages.join('<br>')}`);
 };
 
-const createUnmatchedExpectedHover = (pattern: string): Hover => {
-  return createMarkdownHover(`Files not found by pattern \`${pattern}\``);
+const createUnmatchedExpectedHover = (
+  pattern: string,
+  headerMessage?: string,
+): Hover => {
+  const header = headerMessage ? `**${headerMessage}**\n\n` : '';
+
+  return createMarkdownHover(
+    `${header}Files not found by pattern \`${pattern}\``,
+  );
 };
 
 suite('RegExpCodeJumpHoverProvider.provideHover()', () => {
@@ -52,34 +64,43 @@ suite('RegExpCodeJumpHoverProvider.provideHover()', () => {
       definition: config.definitions[0],
       filePath: '/src/project/sub/content',
       position: new Position(1, 20),
-      expected: createMatchedExpectedHover([
-        '/src/project/main/logger.js',
-        '/src/project/main/logger.ts',
-      ]),
+      expected: createMatchedExpectedHover(
+        ['/src/project/main/logger.js', '/src/project/main/logger.ts'],
+        'namespace-js',
+      ),
     },
     {
       title: 'should display a jump path if matched',
       definition: config.definitions[0],
       filePath: '/src/project/sub/content',
       position: new Position(2, 20),
-      expected: createMatchedExpectedHover(['/src/project/main/tracking.js']),
+      expected: createMatchedExpectedHover(
+        ['/src/project/main/tracking.js'],
+        'namespace-js',
+      ),
     },
     {
       title: 'should display multiple deep jump paths if matched',
       definition: config.definitions[0],
       filePath: '/src/project/sub/content',
       position: new Position(3, 20),
-      expected: createMatchedExpectedHover([
-        '/src/project/core/utils/array.js',
-        '/src/project/core/utils/array.ts',
-      ]),
+      expected: createMatchedExpectedHover(
+        [
+          '/src/project/core/utils/array.js',
+          '/src/project/core/utils/array.ts',
+        ],
+        'namespace-js',
+      ),
     },
     {
       title: 'should display not found pattern if not found',
       definition: config.definitions[0],
       filePath: '/src/project/sub/content',
       position: new Position(4, 20),
-      expected: createUnmatchedExpectedHover('/src/project/not/found.{ts,js}'),
+      expected: createUnmatchedExpectedHover(
+        '/src/project/not/found.{ts,js}',
+        'namespace-js',
+      ),
     },
   ];
 

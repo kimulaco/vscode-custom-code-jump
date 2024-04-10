@@ -3,6 +3,7 @@
     {
       "languages": ["javascript", "typescript"],
       "pattern": "\\.use\\('jp\\.co\\.project\\.(.*?)\\.(.*?)'\\)",
+      "hoverHeader": "namespace-js",
       "rules": [
         {
           "type": "regexp",

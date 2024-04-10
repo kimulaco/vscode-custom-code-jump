@@ -70,13 +70,21 @@ export class RegExpCodeJumpHoverProvider {
   }
 
   private _createUnmatchedMessageByPattern(pattern: string): string {
-    return `Files not found by pattern \`${pattern}\``;
+    const header = this._createHeaderMessage();
+    return `${header}Files not found by pattern \`${pattern}\``;
   }
 
   private _createMatchedMessageByJumpPaths(jumpPaths: string[]): string {
+    const header = this._createHeaderMessage();
     const messages = jumpPaths.map((jumpPath: string) => {
       return `[/${toRelPath(jumpPath)}](${jumpPath})`;
     });
-    return messages.join('<br>');
+    return `${header}${messages.join('<br>')}`;
+  }
+
+  private _createHeaderMessage(): string {
+    return this._config.hoverHeader
+      ? `**${this._config.hoverHeader}**\n\n`
+      : '';
   }
 }
