@@ -22,7 +22,7 @@ const createMatchedExpectedHover = (relPaths: string[]): Hover => {
 };
 
 const createUnmatchedExpectedHover = (pattern: string): Hover => {
-  return createMarkdownHover(`Files not found by \`${pattern}]\``);
+  return createMarkdownHover(`Files not found by pattern \`${pattern}\``);
 };
 
 suite('RegExpCodeJumpHoverProvider.provideHover()', () => {
@@ -53,8 +53,8 @@ suite('RegExpCodeJumpHoverProvider.provideHover()', () => {
       filePath: '/src/project/sub/content',
       position: new Position(1, 20),
       expected: createMatchedExpectedHover([
-        '/src/project/main/logger.ts',
         '/src/project/main/logger.js',
+        '/src/project/main/logger.ts',
       ]),
     },
     {
@@ -65,10 +65,20 @@ suite('RegExpCodeJumpHoverProvider.provideHover()', () => {
       expected: createMatchedExpectedHover(['/src/project/main/tracking.js']),
     },
     {
-      title: 'should display not found pattern if not found',
+      title: 'should display multiple deep jump paths if matched',
       definition: config.definitions[0],
       filePath: '/src/project/sub/content',
       position: new Position(3, 20),
+      expected: createMatchedExpectedHover([
+        '/src/project/core/utils/array.js',
+        '/src/project/core/utils/array.ts',
+      ]),
+    },
+    {
+      title: 'should display not found pattern if not found',
+      definition: config.definitions[0],
+      filePath: '/src/project/sub/content',
+      position: new Position(4, 20),
       expected: createUnmatchedExpectedHover('/src/project/not/found.{ts,js}'),
     },
   ];

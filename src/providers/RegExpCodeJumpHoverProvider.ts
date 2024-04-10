@@ -20,8 +20,8 @@ export type RegExpCodeJumpHoverProviderConfig = {
 export class RegExpCodeJumpHoverProvider {
   private _config: RegExpCodeJumpConfig = {
     languages: [],
-    targetRegexp: '',
-    jumpPathFormat: '',
+    pattern: '',
+    rules: [],
   };
 
   private _outputChannel: OutputChannel;
@@ -70,7 +70,7 @@ export class RegExpCodeJumpHoverProvider {
   }
 
   private _createUnmatchedMessageByPattern(pattern: string): string {
-    return `Files not found by \`${pattern}]\``;
+    return `Files not found by pattern \`${pattern}\``;
   }
 
   private _createMatchedMessageByJumpPaths(jumpPaths: string[]): string {

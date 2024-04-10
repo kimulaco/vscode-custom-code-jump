@@ -2,17 +2,30 @@ import { workspace } from 'vscode';
 import type { Position, TextDocument } from 'vscode';
 import { toRelPath } from '../utils/toRelPath';
 
+export type RegExpCodeJumpRuleType = 'string' | 'regexp';
+
+export type RegExpCodeJumpRule = {
+  type: RegExpCodeJumpRuleType;
+  pattern: string;
+  replacement: string;
+};
+
 export type RegExpCodeJumpConfig = {
   languages: string[];
-  targetRegexp: string;
-  jumpPathFormat: string;
+  pattern: string;
+  rules: RegExpCodeJumpRule[];
 };
+
+export const CODE_JUMP_RULE_TYPES = {
+  STRING: 'string',
+  REGEXP: 'regexp',
+} as const;
 
 export class RegExpCodeJump {
   private _config: RegExpCodeJumpConfig = {
     languages: [],
-    targetRegexp: '',
-    jumpPathFormat: '',
+    pattern: '',
+    rules: [],
   };
 
   private _regexp: RegExp;
@@ -20,7 +33,7 @@ export class RegExpCodeJump {
   public constructor(config: RegExpCodeJumpConfig) {
     this._config = { ...this._config, ...config };
     RegExpCodeJump.validateConfig(this._config);
-    this._regexp = new RegExp(this._config.targetRegexp, 'g');
+    this._regexp = new RegExp(this._config.pattern, 'g');
   }
 
   public async searchTargetCode(
@@ -41,7 +54,18 @@ export class RegExpCodeJump {
   }
 
   public getJumpPathPatternByTargetCode(targetCode: string): string {
-    return targetCode.replace(this._regexp, this._config.jumpPathFormat);
+    let jumpPath = targetCode;
+
+    for (const rule of this._config.rules) {
+      const pattern =
+        rule.type === CODE_JUMP_RULE_TYPES.REGEXP
+          ? new RegExp(rule.pattern, 'g')
+          : rule.pattern;
+
+      jumpPath = jumpPath.replace(pattern, rule.replacement);
+    }
+
+    return jumpPath;
   }
 
   public async searchJumpPathsByPattern(
@@ -52,7 +76,7 @@ export class RegExpCodeJump {
       return [];
     }
 
-    return files.map((file) => file.fsPath);
+    return files.map((file) => file.fsPath).sort();
   }
 
   public static validateConfig(
@@ -70,12 +94,61 @@ export class RegExpCodeJump {
       throw new Error('require config.languages');
     }
 
-    if (!('targetRegexp' in config) || !config.targetRegexp) {
-      throw new Error('require config.targetRegexp');
+    if (!('pattern' in config) || !config.pattern) {
+      throw new Error('require config.pattern');
     }
 
-    if (!('jumpPathFormat' in config) || !config.jumpPathFormat) {
-      throw new Error('require config.jumpPathFormat');
+    if (!('rules' in config) || !config.rules) {
+      throw new Error('require config.rules');
+    }
+
+    if (!Array.isArray(config.rules)) {
+      throw new Error('config.rules must be an array');
+    }
+
+    for (const rule of config.rules) {
+      if (
+        !('type' in rule) ||
+        !rule.type ||
+        !rule.type.includes(CODE_JUMP_RULE_TYPES)
+      ) {
+        this.validateConfigRule(rule);
+      }
+    }
+
+    return true;
+  }
+
+  public static validateConfigRule(rule: unknown): rule is RegExpCodeJumpRule {
+    if (typeof rule !== 'object' || rule === null) {
+      throw new Error('rule must be an object');
+    }
+
+    const ruleTypes: string[] = Object.values(CODE_JUMP_RULE_TYPES);
+
+    if (
+      !('type' in rule) ||
+      !rule.type ||
+      typeof rule.type !== 'string' ||
+      !ruleTypes.includes(rule.type)
+    ) {
+      throw new Error(`config.rules[].type must be 'string' or 'regexp'`);
+    }
+
+    if (
+      !('pattern' in rule) ||
+      !rule.pattern ||
+      typeof rule.pattern !== 'string'
+    ) {
+      throw new Error(`config.rules[].pattern must be string type`);
+    }
+
+    if (
+      !('replacement' in rule) ||
+      !rule.replacement ||
+      typeof rule.replacement !== 'string'
+    ) {
+      throw new Error(`config.rules[].replacement must be string type`);
     }
 
     return true;

@@ -2,8 +2,24 @@
   "regexpCodeJump.definitions": [
     {
       "languages": ["javascript", "typescript"],
-      "targetRegexp": "\\.use\\('jp\\.co\\.project\\.(.*?)\\.(.*?)'\\)",
-      "jumpPathFormat": "/src/project/$1/$2.{ts,js}"
+      "pattern": "\\.use\\('jp\\.co\\.project\\.(.*?)\\.(.*?)'\\)",
+      "rules": [
+        {
+          "type": "regexp",
+          "pattern": "\\.use\\('jp\\.co\\.project\\.(.*?)\\.(.*?)'\\)",
+          "replacement": "/src/project/$1/$2"
+        },
+        {
+          "type": "string",
+          "pattern": ".",
+          "replacement": "/"
+        },
+        {
+          "type": "regexp",
+          "pattern": "^(.*?)$",
+          "replacement": "$1.{ts,js}"
+        }
+      ]
     }
   ]
 }
