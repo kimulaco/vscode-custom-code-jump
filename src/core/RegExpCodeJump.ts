@@ -37,6 +37,14 @@ export class RegExpCodeJump {
     this._regexp = new RegExp(this._config.pattern, 'g');
   }
 
+  public get config(): RegExpCodeJumpConfig {
+    return this._config;
+  }
+
+  public get regexp(): RegExp {
+    return this._regexp;
+  }
+
   public async searchTargetCode(
     document: TextDocument,
     position: Position,
@@ -104,17 +112,11 @@ export class RegExpCodeJump {
     }
 
     if (!Array.isArray(config.rules)) {
-      throw new Error('config.rules must be an array');
+      throw new Error('config.rules must be array');
     }
 
     for (const rule of config.rules) {
-      if (
-        !('type' in rule) ||
-        !rule.type ||
-        !rule.type.includes(CODE_JUMP_RULE_TYPES)
-      ) {
-        this.validateConfigRule(rule);
-      }
+      this.validateConfigRule(rule);
     }
 
     return true;
@@ -122,7 +124,7 @@ export class RegExpCodeJump {
 
   public static validateConfigRule(rule: unknown): rule is RegExpCodeJumpRule {
     if (typeof rule !== 'object' || rule === null) {
-      throw new Error('rule must be an object');
+      throw new Error('config.rules[] must be object');
     }
 
     const ruleTypes: string[] = Object.values(CODE_JUMP_RULE_TYPES);
