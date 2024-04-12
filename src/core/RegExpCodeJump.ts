@@ -1,5 +1,6 @@
 import { workspace } from 'vscode';
 import type { Position, TextDocument } from 'vscode';
+import { getExtByFilePath } from '../utils/getExtByFilePath';
 import { toRelPath } from '../utils/toRelPath';
 
 export type RegExpCodeJumpRuleType = 'string' | 'regexp';
@@ -85,7 +86,37 @@ export class RegExpCodeJump {
       return [];
     }
 
-    return files.map((file) => file.fsPath).sort();
+    return this._sortFilePathsByPattern(
+      files.map((file) => file.fsPath),
+      jumpPathPattern,
+    );
+  }
+
+  private _sortFilePathsByPattern(files: string[], pattern: string): string[] {
+    if (files.length <= 0 || !pattern) {
+      return files.sort();
+    }
+
+    const matches = pattern.match(/\.\{([^}]+)\}/);
+    if (!matches || matches.length <= 1) {
+      return files.sort();
+    }
+
+    const exts = matches[1].split(',').map((ext) => ext.trim());
+    const extOrders: Record<string, number> = {};
+    for (const ext of exts) {
+      extOrders[ext] = exts.indexOf(ext);
+    }
+
+    return files.sort((a: string, b: string) => {
+      const extA = getExtByFilePath(a);
+      const extB = getExtByFilePath(b);
+
+      if (extOrders[extA] < extOrders[extB]) return -1;
+      if (extOrders[extA] > extOrders[extB]) return 1;
+
+      return a.localeCompare(b);
+    });
   }
 
   public static validateConfig(

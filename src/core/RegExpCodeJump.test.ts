@@ -247,6 +247,22 @@ suite('RegExpCodeJump.searchJumpPathsByPattern()', () => {
 
   const TEST_CASES: TestCase[] = [
     {
+      title: 'should return searched file paths by file path',
+      config: {
+        languages: ['javascript'],
+        pattern: '\\.\\*',
+        rules: [
+          {
+            type: 'string',
+            pattern: '.',
+            replacement: '/',
+          },
+        ],
+      },
+      pattern: '/src/project/core/utils/array.ts',
+      expected: [toWorkspacePath('/src/project/core/utils/array.ts')],
+    },
+    {
       title: 'should return searched file paths by file path pattern',
       config: {
         languages: ['javascript'],
@@ -263,6 +279,25 @@ suite('RegExpCodeJump.searchJumpPathsByPattern()', () => {
       expected: [
         toWorkspacePath('/src/project/core/utils/array.js'),
         toWorkspacePath('/src/project/core/utils/array.ts'),
+      ],
+    },
+    {
+      title: 'should return sorted file paths by file path pattern',
+      config: {
+        languages: ['javascript'],
+        pattern: '\\.\\*',
+        rules: [
+          {
+            type: 'string',
+            pattern: '.',
+            replacement: '/',
+          },
+        ],
+      },
+      pattern: '/src/project/core/utils/array.{ts,js}',
+      expected: [
+        toWorkspacePath('/src/project/core/utils/array.ts'),
+        toWorkspacePath('/src/project/core/utils/array.js'),
       ],
     },
     {

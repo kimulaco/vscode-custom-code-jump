@@ -65,7 +65,7 @@ suite('RegExpCodeJumpHoverProvider.provideHover()', () => {
       filePath: '/src/project/sub/content',
       position: new Position(1, 20),
       expected: createMatchedExpectedHover(
-        ['/src/project/main/logger.js', '/src/project/main/logger.ts'],
+        ['/src/project/main/logger.ts', '/src/project/main/logger.js'],
         'namespace-js',
       ),
     },
@@ -86,8 +86,8 @@ suite('RegExpCodeJumpHoverProvider.provideHover()', () => {
       position: new Position(3, 20),
       expected: createMatchedExpectedHover(
         [
-          '/src/project/core/utils/array.js',
           '/src/project/core/utils/array.ts',
+          '/src/project/core/utils/array.js',
         ],
         'namespace-js',
       ),
