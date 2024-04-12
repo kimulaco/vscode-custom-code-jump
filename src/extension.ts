@@ -5,6 +5,7 @@ import type {
   HoverProvider,
 } from 'vscode';
 import { EXTENSION_DISPLAY_NAME, EXTENSION_CONFIG_NAME } from './configs';
+import { RegExpCodeJumpDefinitionProvider } from './providers/RegExpCodeJumpDefinitionProvider';
 import { RegExpCodeJumpHoverProvider } from './providers/RegExpCodeJumpHoverProvider';
 import { RegExpCodeJump } from './core/RegExpCodeJump';
 
@@ -25,9 +26,15 @@ export const activate = (context: ExtensionContext) => {
       continue;
     }
 
-    // context.subscriptions.push(
-    //   languages.registerDefinitionProvider([], {} as DefinitionProvider),
-    // );
+    context.subscriptions.push(
+      languages.registerDefinitionProvider(
+        definition.languages,
+        new RegExpCodeJumpDefinitionProvider({
+          config: definition,
+          outputChannel: output,
+        }) as DefinitionProvider,
+      ),
+    );
 
     context.subscriptions.push(
       languages.registerHoverProvider(
