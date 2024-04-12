@@ -6,19 +6,19 @@ import type {
   TextDocument,
 } from 'vscode';
 import {
-  RegExpCodeJump,
-  type RegExpCodeJumpConfig,
-} from '../core/RegExpCodeJump';
+  CustomCodeJump,
+  type CustomCodeJumpConfig,
+} from '../core/CustomCodeJump';
 import { toRelPath } from '../utils/toRelPath';
 import { createMarkdownHover } from '../utils/createMarkdownHover';
 
-export type RegExpCodeJumpHoverProviderConfig = {
-  config: RegExpCodeJumpConfig;
+export type CustomCodeJumpHoverProviderConfig = {
+  config: CustomCodeJumpConfig;
   outputChannel: OutputChannel;
 };
 
-export class RegExpCodeJumpHoverProvider {
-  private _config: RegExpCodeJumpConfig = {
+export class CustomCodeJumpHoverProvider {
+  private _config: CustomCodeJumpConfig = {
     languages: [],
     pattern: '',
     rules: [],
@@ -29,7 +29,7 @@ export class RegExpCodeJumpHoverProvider {
   public constructor({
     config,
     outputChannel,
-  }: RegExpCodeJumpHoverProviderConfig) {
+  }: CustomCodeJumpHoverProviderConfig) {
     this._config = { ...this._config, ...config };
     this._outputChannel = outputChannel;
   }
@@ -38,10 +38,10 @@ export class RegExpCodeJumpHoverProvider {
     document: TextDocument,
     position: Position,
   ): Promise<ProviderResult<Hover>> {
-    const regExpCodeJump = new RegExpCodeJump(this._config);
+    const customCodeJump = new CustomCodeJump(this._config);
 
     try {
-      const targetCode = await regExpCodeJump.searchTargetCode(
+      const targetCode = await customCodeJump.searchTargetCode(
         document,
         position,
       );
@@ -50,9 +50,9 @@ export class RegExpCodeJumpHoverProvider {
       }
 
       const jumpPathPattern =
-        regExpCodeJump.getJumpPathPatternByTargetCode(targetCode);
+        customCodeJump.getJumpPathPatternByTargetCode(targetCode);
       const jumpPaths =
-        await regExpCodeJump.searchJumpPathsByPattern(jumpPathPattern);
+        await customCodeJump.searchJumpPathsByPattern(jumpPathPattern);
 
       if (jumpPaths.length <= 0) {
         const message = this._createUnmatchedMessageByPattern(jumpPathPattern);

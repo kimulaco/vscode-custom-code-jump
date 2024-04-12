@@ -1,24 +1,24 @@
 import { deepStrictEqual, throws } from 'assert';
 import { Position, workspace, Uri } from 'vscode';
-import { RegExpCodeJump } from './RegExpCodeJump';
+import { CustomCodeJump } from './CustomCodeJump';
 import type {
-  RegExpCodeJumpConfig,
-  RegExpCodeJumpRule,
-} from './RegExpCodeJump';
+  CustomCodeJumpConfig,
+  CustomCodeJumpRule,
+} from './CustomCodeJump';
 import { getWorkspacePath } from '../utils/getWorkspacePath';
 import { toWorkspacePath } from '../utils/toWorkspacePath';
 
-suite('RegExpCodeJump.constructor()', () => {
+suite('CustomCodeJump.constructor()', () => {
   type TestCase = {
     title: string;
-    config: RegExpCodeJumpConfig;
-    expected: { config: RegExpCodeJumpConfig; regexp: RegExp } | Error;
+    config: CustomCodeJumpConfig;
+    expected: { config: CustomCodeJumpConfig; regexp: RegExp } | Error;
   };
 
   const TEST_CASES: TestCase[] = [
     {
       title: 'should throw errror if config is empty',
-      config: {} as RegExpCodeJumpConfig,
+      config: {} as CustomCodeJumpConfig,
       expected: new Error('require config.languages'),
     },
     {
@@ -56,7 +56,7 @@ suite('RegExpCodeJump.constructor()', () => {
       config: {
         languages: ['javascript'],
         pattern: '\\.\\*',
-        rules: undefined as unknown as RegExpCodeJumpRule[],
+        rules: undefined as unknown as CustomCodeJumpRule[],
       },
       expected: new Error('require config.rules'),
     },
@@ -65,7 +65,7 @@ suite('RegExpCodeJump.constructor()', () => {
       config: {
         languages: ['javascript'],
         pattern: '\\.\\*',
-        rules: {} as unknown as RegExpCodeJumpRule[],
+        rules: {} as unknown as CustomCodeJumpRule[],
       },
       expected: new Error('config.rules must be array'),
     },
@@ -74,7 +74,7 @@ suite('RegExpCodeJump.constructor()', () => {
       config: {
         languages: ['javascript'],
         pattern: '\\.\\*',
-        rules: ['$1'] as unknown as RegExpCodeJumpRule[],
+        rules: ['$1'] as unknown as CustomCodeJumpRule[],
       },
       expected: new Error('config.rules[] must be object'),
     },
@@ -83,7 +83,7 @@ suite('RegExpCodeJump.constructor()', () => {
       config: {
         languages: ['javascript'],
         pattern: '\\.\\*',
-        rules: [null] as unknown as RegExpCodeJumpRule[],
+        rules: [null] as unknown as CustomCodeJumpRule[],
       },
       expected: new Error('config.rules[] must be object'),
     },
@@ -94,7 +94,7 @@ suite('RegExpCodeJump.constructor()', () => {
         pattern: '\\.\\*',
         rules: [
           { type: 'glob', pattern: '*', replacement: '-' },
-        ] as unknown as RegExpCodeJumpRule[],
+        ] as unknown as CustomCodeJumpRule[],
       },
       expected: new Error(`config.rules[].type must be 'string' or 'regexp'`),
     },
@@ -109,7 +109,7 @@ suite('RegExpCodeJump.constructor()', () => {
             pattern: /\./,
             replacement: '/',
           },
-        ] as unknown as RegExpCodeJumpRule[],
+        ] as unknown as CustomCodeJumpRule[],
       },
       expected: new Error('config.rules[].pattern must be string type'),
     },
@@ -124,7 +124,7 @@ suite('RegExpCodeJump.constructor()', () => {
             pattern: '.',
             replacement: 1,
           },
-        ] as unknown as RegExpCodeJumpRule[],
+        ] as unknown as CustomCodeJumpRule[],
       },
       expected: new Error('config.rules[].replacement must be string type'),
     },
@@ -163,13 +163,13 @@ suite('RegExpCodeJump.constructor()', () => {
       if (testCase.expected instanceof Error) {
         throws(
           () => {
-            new RegExpCodeJump(testCase.config);
+            new CustomCodeJump(testCase.config);
           },
           testCase.expected,
           testCase.expected,
         );
       } else {
-        const instance = new RegExpCodeJump(testCase.config);
+        const instance = new CustomCodeJump(testCase.config);
         deepStrictEqual(instance.config, testCase.expected.config);
         deepStrictEqual(instance.regexp, testCase.expected.regexp);
       }
@@ -177,11 +177,11 @@ suite('RegExpCodeJump.constructor()', () => {
   }
 });
 
-suite('RegExpCodeJump.searchTargetCode()', () => {
+suite('CustomCodeJump.searchTargetCode()', () => {
   type TestCase = {
     title: string;
     filePath: string;
-    config: RegExpCodeJumpConfig;
+    config: CustomCodeJumpConfig;
     position: Position;
     expected: string;
   };
@@ -227,7 +227,7 @@ suite('RegExpCodeJump.searchTargetCode()', () => {
     test(testCase.title, async () => {
       const fileUri = Uri.file(toWorkspacePath(testCase.filePath));
       const document = await workspace.openTextDocument(fileUri);
-      const instance = new RegExpCodeJump(testCase.config);
+      const instance = new CustomCodeJump(testCase.config);
       const paths = await instance.searchTargetCode(
         document,
         testCase.position,
@@ -237,10 +237,10 @@ suite('RegExpCodeJump.searchTargetCode()', () => {
   }
 });
 
-suite('RegExpCodeJump.searchJumpPathsByPattern()', () => {
+suite('CustomCodeJump.searchJumpPathsByPattern()', () => {
   type TestCase = {
     title: string;
-    config: RegExpCodeJumpConfig;
+    config: CustomCodeJumpConfig;
     pattern: string;
     expected: string[];
   };
@@ -320,17 +320,17 @@ suite('RegExpCodeJump.searchJumpPathsByPattern()', () => {
 
   for (const testCase of TEST_CASES) {
     test(testCase.title, async () => {
-      const instance = new RegExpCodeJump(testCase.config);
+      const instance = new CustomCodeJump(testCase.config);
       const paths = await instance.searchJumpPathsByPattern(testCase.pattern);
       deepStrictEqual(paths, testCase.expected);
     });
   }
 });
 
-suite('RegExpCodeJump.getJumpPathPatternByTargetCode()', () => {
+suite('CustomCodeJump.getJumpPathPatternByTargetCode()', () => {
   type TestCase = {
     title: string;
-    config: RegExpCodeJumpConfig;
+    config: CustomCodeJumpConfig;
     targetCode: string;
     expected: string;
   };
@@ -382,7 +382,7 @@ suite('RegExpCodeJump.getJumpPathPatternByTargetCode()', () => {
 
   for (const testCase of TEST_CASES) {
     test(testCase.title, () => {
-      const instance = new RegExpCodeJump(testCase.config);
+      const instance = new CustomCodeJump(testCase.config);
       deepStrictEqual(
         instance.getJumpPathPatternByTargetCode(testCase.targetCode),
         testCase.expected,

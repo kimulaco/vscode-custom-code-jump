@@ -3,19 +3,19 @@ import type { Position, TextDocument } from 'vscode';
 import { getExtByFilePath } from '../utils/getExtByFilePath';
 import { toRelPath } from '../utils/toRelPath';
 
-export type RegExpCodeJumpRuleType = 'string' | 'regexp';
+export type CustomCodeJumpRuleType = 'string' | 'regexp';
 
-export type RegExpCodeJumpRule = {
-  type: RegExpCodeJumpRuleType;
+export type CustomCodeJumpRule = {
+  type: CustomCodeJumpRuleType;
   pattern: string;
   replacement: string;
 };
 
-export type RegExpCodeJumpConfig = {
+export type CustomCodeJumpConfig = {
   languages: string[];
   pattern: string;
   hoverHeader?: string;
-  rules: RegExpCodeJumpRule[];
+  rules: CustomCodeJumpRule[];
 };
 
 export const CODE_JUMP_RULE_TYPES = {
@@ -23,8 +23,8 @@ export const CODE_JUMP_RULE_TYPES = {
   REGEXP: 'regexp',
 } as const;
 
-export class RegExpCodeJump {
-  private _config: RegExpCodeJumpConfig = {
+export class CustomCodeJump {
+  private _config: CustomCodeJumpConfig = {
     languages: [],
     pattern: '',
     rules: [],
@@ -32,13 +32,13 @@ export class RegExpCodeJump {
 
   private _regexp: RegExp;
 
-  public constructor(config: RegExpCodeJumpConfig) {
+  public constructor(config: CustomCodeJumpConfig) {
     this._config = { ...this._config, ...config };
-    RegExpCodeJump.validateConfig(this._config);
+    CustomCodeJump.validateConfig(this._config);
     this._regexp = new RegExp(this._config.pattern, 'g');
   }
 
-  public get config(): RegExpCodeJumpConfig {
+  public get config(): CustomCodeJumpConfig {
     return this._config;
   }
 
@@ -121,7 +121,7 @@ export class RegExpCodeJump {
 
   public static validateConfig(
     config: unknown,
-  ): config is RegExpCodeJumpConfig {
+  ): config is CustomCodeJumpConfig {
     if (typeof config !== 'object' || config === null) {
       throw new Error('config must be an object');
     }
@@ -153,7 +153,7 @@ export class RegExpCodeJump {
     return true;
   }
 
-  public static validateConfigRule(rule: unknown): rule is RegExpCodeJumpRule {
+  public static validateConfigRule(rule: unknown): rule is CustomCodeJumpRule {
     if (typeof rule !== 'object' || rule === null) {
       throw new Error('config.rules[] must be object');
     }

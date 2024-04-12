@@ -1,5 +1,5 @@
 {
-  "regexpCodeJump.definitions": [
+  "customCodeJump.definitions": [
     {
       "languages": ["javascript", "typescript"],
       "pattern": "\\.use\\('jp\\.co\\.project\\.(.*?)\\.(.*?)'\\)",

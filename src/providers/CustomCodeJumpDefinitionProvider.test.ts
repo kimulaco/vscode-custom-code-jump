@@ -1,7 +1,7 @@
 import { deepStrictEqual } from 'assert';
 import { Location, Position, Uri, window, workspace } from 'vscode';
 import { EXTENSION_DISPLAY_NAME, EXTENSION_CONFIG_NAME } from '../configs';
-import { RegExpCodeJumpDefinitionProvider } from './RegExpCodeJumpDefinitionProvider';
+import { CustomCodeJumpDefinitionProvider } from './CustomCodeJumpDefinitionProvider';
 import { getWorkspacePath } from '../utils/getWorkspacePath';
 import { toWorkspacePath } from '../utils/toWorkspacePath';
 
@@ -11,7 +11,7 @@ const createLocationByFilePath = (filePath: string): Location => {
   return new Location(Uri.file(toWorkspacePath(filePath)), new Position(0, 0));
 };
 
-suite('RegExpCodeJumpDefinitionProvider.provideHover()', () => {
+suite('CustomCodeJumpDefinitionProvider.provideHover()', () => {
   type TestCase = {
     title: string;
     filePath: string;
@@ -71,7 +71,7 @@ suite('RegExpCodeJumpDefinitionProvider.provideHover()', () => {
         );
         const document = await workspace.openTextDocument(fileUri);
 
-        const location = await new RegExpCodeJumpDefinitionProvider({
+        const location = await new CustomCodeJumpDefinitionProvider({
           config: testCase.definition,
           outputChannel: output,
         }).provideDefinition(document, testCase.position);

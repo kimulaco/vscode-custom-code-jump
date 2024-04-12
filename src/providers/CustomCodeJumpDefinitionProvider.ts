@@ -6,18 +6,18 @@ import type {
   TextDocument,
 } from 'vscode';
 import {
-  RegExpCodeJump,
-  type RegExpCodeJumpConfig,
-} from '../core/RegExpCodeJump';
+  CustomCodeJump,
+  type CustomCodeJumpConfig,
+} from '../core/CustomCodeJump';
 import { toWorkspacePath } from '../utils/toWorkspacePath';
 
-export type RegExpCodeJumpDefinitionProviderConfig = {
-  config: RegExpCodeJumpConfig;
+export type CustomCodeJumpDefinitionProviderConfig = {
+  config: CustomCodeJumpConfig;
   outputChannel: OutputChannel;
 };
 
-export class RegExpCodeJumpDefinitionProvider {
-  private _config: RegExpCodeJumpConfig = {
+export class CustomCodeJumpDefinitionProvider {
+  private _config: CustomCodeJumpConfig = {
     languages: [],
     pattern: '',
     rules: [],
@@ -28,7 +28,7 @@ export class RegExpCodeJumpDefinitionProvider {
   public constructor({
     config,
     outputChannel,
-  }: RegExpCodeJumpDefinitionProviderConfig) {
+  }: CustomCodeJumpDefinitionProviderConfig) {
     this._config = { ...this._config, ...config };
     this._outputChannel = outputChannel;
   }
@@ -37,10 +37,10 @@ export class RegExpCodeJumpDefinitionProvider {
     document: TextDocument,
     position: Position,
   ): Promise<ProviderResult<Definition>> {
-    const regExpCodeJump = new RegExpCodeJump(this._config);
+    const customCodeJump = new CustomCodeJump(this._config);
 
     try {
-      const targetCode = await regExpCodeJump.searchTargetCode(
+      const targetCode = await customCodeJump.searchTargetCode(
         document,
         position,
       );
@@ -49,9 +49,9 @@ export class RegExpCodeJumpDefinitionProvider {
       }
 
       const jumpPathPattern =
-        regExpCodeJump.getJumpPathPatternByTargetCode(targetCode);
+        customCodeJump.getJumpPathPatternByTargetCode(targetCode);
       const jumpPaths =
-        await regExpCodeJump.searchJumpPathsByPattern(jumpPathPattern);
+        await customCodeJump.searchJumpPathsByPattern(jumpPathPattern);
 
       if (jumpPaths.length <= 0) {
         return;

@@ -5,9 +5,9 @@ import type {
   HoverProvider,
 } from 'vscode';
 import { EXTENSION_DISPLAY_NAME, EXTENSION_CONFIG_NAME } from './configs';
-import { RegExpCodeJumpDefinitionProvider } from './providers/RegExpCodeJumpDefinitionProvider';
-import { RegExpCodeJumpHoverProvider } from './providers/RegExpCodeJumpHoverProvider';
-import { RegExpCodeJump } from './core/RegExpCodeJump';
+import { CustomCodeJumpDefinitionProvider } from './providers/CustomCodeJumpDefinitionProvider';
+import { CustomCodeJumpHoverProvider } from './providers/CustomCodeJumpHoverProvider';
+import { CustomCodeJump } from './core/CustomCodeJump';
 
 export const activate = (context: ExtensionContext) => {
   const output = window.createOutputChannel(EXTENSION_DISPLAY_NAME);
@@ -16,7 +16,7 @@ export const activate = (context: ExtensionContext) => {
 
   for (const definition of config.definitions) {
     try {
-      if (!RegExpCodeJump.validateConfig(definition)) {
+      if (!CustomCodeJump.validateConfig(definition)) {
         continue;
       }
     } catch (error) {
@@ -29,7 +29,7 @@ export const activate = (context: ExtensionContext) => {
     context.subscriptions.push(
       languages.registerDefinitionProvider(
         definition.languages,
-        new RegExpCodeJumpDefinitionProvider({
+        new CustomCodeJumpDefinitionProvider({
           config: definition,
           outputChannel: output,
         }) as DefinitionProvider,
@@ -39,7 +39,7 @@ export const activate = (context: ExtensionContext) => {
     context.subscriptions.push(
       languages.registerHoverProvider(
         definition.languages,
-        new RegExpCodeJumpHoverProvider({
+        new CustomCodeJumpHoverProvider({
           config: definition,
           outputChannel: output,
         }) as HoverProvider,

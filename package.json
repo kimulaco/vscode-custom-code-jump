@@ -1,8 +1,8 @@
 {
-  "name": "vscode-regexp-code-jump",
-  "displayName": "RegExp Code Jump",
+  "name": "vscode-custom-code-jump",
+  "displayName": "Custom Code Jump",
   "publisher": "kimulaco",
-  "description": "Extension to create code jump with RegExp",
+  "description": "Extension to create custom code jump rules",
   "license": "MIT",
   "version": "0.1.0",
   "engines": {
@@ -22,24 +22,12 @@
   "contributes": {
     "hoverProvider": true,
     "definitionProvider": true,
-    "languages": [
-      {
-        "id": "javascript",
-        "extensions": [
-          ".js"
-        ],
-        "aliases": [
-          "JavaScript",
-          "javascript",
-          "js"
-        ]
-      }
-    ],
+    "languages": [],
     "configuration": [
       {
         "title": "Code Jump Configs",
         "properties": {
-          "regexpCodeJump.definitions": {
+          "customCodeJump.definitions": {
             "type": "array",
             "default": [],
             "description": "code jump configs"

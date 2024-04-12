@@ -2,7 +2,7 @@ import { deepStrictEqual } from 'assert';
 import { Hover, Position, Uri, window, workspace } from 'vscode';
 import type { MarkdownString } from 'vscode';
 import { EXTENSION_DISPLAY_NAME, EXTENSION_CONFIG_NAME } from '../configs';
-import { RegExpCodeJumpHoverProvider } from './RegExpCodeJumpHoverProvider';
+import { CustomCodeJumpHoverProvider } from './CustomCodeJumpHoverProvider';
 import { getWorkspacePath } from '../utils/getWorkspacePath';
 import { createMarkdownHover } from '../utils/createMarkdownHover';
 import { toRelPath } from '../utils/toRelPath';
@@ -37,7 +37,7 @@ const createUnmatchedExpectedHover = (
   );
 };
 
-suite('RegExpCodeJumpHoverProvider.provideHover()', () => {
+suite('CustomCodeJumpHoverProvider.provideHover()', () => {
   type TestCase = {
     title: string;
     filePath: string;
@@ -112,7 +112,7 @@ suite('RegExpCodeJumpHoverProvider.provideHover()', () => {
         );
         const document = await workspace.openTextDocument(fileUri);
 
-        const hover = await new RegExpCodeJumpHoverProvider({
+        const hover = await new CustomCodeJumpHoverProvider({
           config: testCase.definition,
           outputChannel: output,
         }).provideHover(document, testCase.position);
