@@ -8,7 +8,7 @@
         {
           "type": "regexp",
           "pattern": "\\.use\\('jp\\.co\\.project\\.(.*?)\\.(.*?)'\\)",
-          "replacement": "/src/project/$1/$2"
+          "replacement": "/scripts/project/$1/$2"
         },
         {
           "type": "string",

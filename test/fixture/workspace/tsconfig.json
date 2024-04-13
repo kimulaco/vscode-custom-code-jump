@@ -5,7 +5,7 @@
     "outDir": "dist",
     "lib": ["ES2022"],
     "sourceMap": true,
-    "rootDir": "src",
+    "rootDir": "scripts",
     "strict": true,
     "resolveJsonModule": true
   },

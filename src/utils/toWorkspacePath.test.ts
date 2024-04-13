@@ -10,18 +10,18 @@ suite('toWorkspacePath()', () => {
     const expected = path.resolve(
       cwd,
       fixturePath,
-      'src/project/sub/content.js',
+      'scripts/project/sub/content.js',
     );
 
-    strictEqual(toWorkspacePath('src/project/sub/content.js'), expected);
-    strictEqual(toWorkspacePath('/src/project/sub/content.js'), expected);
+    strictEqual(toWorkspacePath('scripts/project/sub/content.js'), expected);
+    strictEqual(toWorkspacePath('/scripts/project/sub/content.js'), expected);
   });
 
   test('should return arg as is if workspace path', () => {
     const workspacePath = path.resolve(
       cwd,
       fixturePath,
-      'src/project/sub/content.js',
+      'scripts/project/sub/content.js',
     );
 
     strictEqual(toWorkspacePath(workspacePath), workspacePath);

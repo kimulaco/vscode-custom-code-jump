@@ -55,39 +55,39 @@ suite('CustomCodeJumpHoverProvider.provideHover()', () => {
     {
       title: 'should not display jump paths if not matched',
       definition: config.definitions[0],
-      filePath: '/src/project/sub/content',
+      filePath: '/scripts/project/sub/content',
       position: new Position(0, 20),
       expected: undefined,
     },
     {
       title: 'should display multiple jump paths if matched',
       definition: config.definitions[0],
-      filePath: '/src/project/sub/content',
+      filePath: '/scripts/project/sub/content',
       position: new Position(1, 20),
       expected: createMatchedExpectedHover(
-        ['/src/project/main/logger.ts', '/src/project/main/logger.js'],
+        ['/scripts/project/main/logger.ts', '/scripts/project/main/logger.js'],
         'namespace-js',
       ),
     },
     {
       title: 'should display a jump path if matched',
       definition: config.definitions[0],
-      filePath: '/src/project/sub/content',
+      filePath: '/scripts/project/sub/content',
       position: new Position(2, 20),
       expected: createMatchedExpectedHover(
-        ['/src/project/main/tracking.js'],
+        ['/scripts/project/main/tracking.js'],
         'namespace-js',
       ),
     },
     {
       title: 'should display multiple deep jump paths if matched',
       definition: config.definitions[0],
-      filePath: '/src/project/sub/content',
+      filePath: '/scripts/project/sub/content',
       position: new Position(3, 20),
       expected: createMatchedExpectedHover(
         [
-          '/src/project/core/utils/array.ts',
-          '/src/project/core/utils/array.js',
+          '/scripts/project/core/utils/array.ts',
+          '/scripts/project/core/utils/array.js',
         ],
         'namespace-js',
       ),
@@ -95,10 +95,10 @@ suite('CustomCodeJumpHoverProvider.provideHover()', () => {
     {
       title: 'should display not found pattern if not found',
       definition: config.definitions[0],
-      filePath: '/src/project/sub/content',
+      filePath: '/scripts/project/sub/content',
       position: new Position(4, 20),
       expected: createUnmatchedExpectedHover(
-        '/src/project/not/found.{ts,js}',
+        '/scripts/project/not/found.{ts,js}',
         'namespace-js',
       ),
     },

@@ -189,7 +189,7 @@ suite('CustomCodeJump.searchTargetCode()', () => {
   const TEST_CASES: TestCase[] = [
     {
       title: 'should return target code by matched position',
-      filePath: '/src/project/sub/content.ts',
+      filePath: '/scripts/project/sub/content.ts',
       config: {
         languages: ['javascript'],
         pattern: `\\.use\\('jp\\.co\\.project\\.(.*?)\\.(.*?)'\\)`,
@@ -206,7 +206,7 @@ suite('CustomCodeJump.searchTargetCode()', () => {
     },
     {
       title: 'should return empty string by unmatched position',
-      filePath: '/src/project/sub/content.js',
+      filePath: '/scripts/project/sub/content.js',
       config: {
         languages: ['javascript'],
         pattern: `\\.use\\('jp\\.co\\.project\\.(.*?)\\.(.*?)'\\)`,
@@ -259,8 +259,8 @@ suite('CustomCodeJump.searchJumpPathsByPattern()', () => {
           },
         ],
       },
-      pattern: '/src/project/core/utils/array.ts',
-      expected: [toWorkspacePath('/src/project/core/utils/array.ts')],
+      pattern: '/scripts/project/core/utils/array.ts',
+      expected: [toWorkspacePath('/scripts/project/core/utils/array.ts')],
     },
     {
       title: 'should return searched file paths by file path pattern',
@@ -275,10 +275,10 @@ suite('CustomCodeJump.searchJumpPathsByPattern()', () => {
           },
         ],
       },
-      pattern: '/src/project/core/utils/array.{js,ts}',
+      pattern: '/scripts/project/core/utils/array.{js,ts}',
       expected: [
-        toWorkspacePath('/src/project/core/utils/array.js'),
-        toWorkspacePath('/src/project/core/utils/array.ts'),
+        toWorkspacePath('/scripts/project/core/utils/array.js'),
+        toWorkspacePath('/scripts/project/core/utils/array.ts'),
       ],
     },
     {
@@ -294,10 +294,10 @@ suite('CustomCodeJump.searchJumpPathsByPattern()', () => {
           },
         ],
       },
-      pattern: '/src/project/core/utils/array.{ts,js}',
+      pattern: '/scripts/project/core/utils/array.{ts,js}',
       expected: [
-        toWorkspacePath('/src/project/core/utils/array.ts'),
-        toWorkspacePath('/src/project/core/utils/array.js'),
+        toWorkspacePath('/scripts/project/core/utils/array.ts'),
+        toWorkspacePath('/scripts/project/core/utils/array.js'),
       ],
     },
     {
@@ -313,7 +313,7 @@ suite('CustomCodeJump.searchJumpPathsByPattern()', () => {
           },
         ],
       },
-      pattern: '/src/project/not/found.{js,ts}',
+      pattern: '/scripts/project/not/found.{js,ts}',
       expected: [],
     },
   ];
