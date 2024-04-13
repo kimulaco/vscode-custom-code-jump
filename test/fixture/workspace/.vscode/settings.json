@@ -21,6 +21,28 @@
           "replacement": "$1.{ts,js}"
         }
       ]
+    },
+    {
+      "languages": ["php"],
+      "pattern": "\\'\\\\WorkspaceApp\\\\(.*?)\\'",
+      "hoverHeader": "PHP string namespace",
+      "rules": [
+        {
+          "type": "regexp",
+          "pattern": "\\'\\\\WorkspaceApp\\\\(.*?)\\'",
+          "replacement": "/php/$1"
+        },
+        {
+          "type": "string",
+          "pattern": "\\",
+          "replacement": "/"
+        },
+        {
+          "type": "regexp",
+          "pattern": "^(.*?)$",
+          "replacement": "$1.php"
+        }
+      ]
     }
   ]
 }
