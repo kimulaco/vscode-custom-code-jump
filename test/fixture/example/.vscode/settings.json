@@ -1,0 +1,26 @@
+{
+  "customCodeJump.definitions": [
+    {
+      "languages": ["typescript", "javascript"],
+      "pattern": "'jp\\.project\\.(.*?)'",
+      "hoverHeader": "Namespace string",
+      "rules": [
+        {
+          "type": "regexp",
+          "pattern": "'jp\\.project\\.(.*?)'",
+          "replacement": "/src/jp/project/$1"
+        },
+        {
+          "type": "string",
+          "pattern": ".",
+          "replacement": "/"
+        },
+        {
+          "type": "regexp",
+          "pattern": "^(.*?)$",
+          "replacement": "$1.{ts,js}"
+        }
+      ]
+    }
+  ]
+}

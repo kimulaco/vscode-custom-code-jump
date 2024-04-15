@@ -67,12 +67,17 @@ export class CustomCodeJump {
     let jumpPath = targetCode;
 
     for (const rule of this._config.rules) {
-      const pattern =
-        rule.type === CODE_JUMP_RULE_TYPES.REGEXP
-          ? new RegExp(rule.pattern, 'g')
-          : rule.pattern;
+      if (rule.type === CODE_JUMP_RULE_TYPES.REGEXP) {
+        jumpPath = jumpPath.replace(
+          new RegExp(rule.pattern, 'g'),
+          rule.replacement,
+        );
+        continue;
+      }
 
-      jumpPath = jumpPath.replace(pattern, rule.replacement);
+      if (rule.type === CODE_JUMP_RULE_TYPES.STRING) {
+        jumpPath = jumpPath.replaceAll(rule.pattern, rule.replacement);
+      }
     }
 
     return jumpPath;
