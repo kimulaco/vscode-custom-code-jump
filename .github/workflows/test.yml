@@ -24,6 +24,7 @@ jobs:
           node-version: ${{ matrix.node }}
       - run: npm ci
       - run: npm run lint
+        if: runner.os == 'Linux'
       - run: xvfb-run -a npm run test
         if: runner.os == 'Linux'
       - run: npm run test
